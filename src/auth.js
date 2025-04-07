@@ -3,6 +3,7 @@ import GitHub from "next-auth/providers/github";
 import { connectDB } from "../lib/db";
 import User from "../models/User";
 
+
 // Force Node.js runtime
 export const runtime = "nodejs";
 
@@ -26,6 +27,8 @@ export const authConfig = {
         } else {
           await User.updateOne({ email: userData.email }, userData);
         }
+
+        session.user.id = user._id.toString();
 
         return session;
       } catch (error) {
