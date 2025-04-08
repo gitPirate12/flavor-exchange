@@ -17,20 +17,29 @@ import {
   FaTag
 } from "react-icons/fa";
 import { GiCookingPot, GiKnifeFork } from "react-icons/gi";
+import FavoritesContext from "../../../../lib/context/FavoritesContext"; 
 
 const Page = () => {
   const { id } = useParams();
   const router = useRouter();
   const { recipes, loading, deleteRecipe } = useContext(RecipeContext);
+  const { favorites, addFavorite, removeFavorite } = useContext(FavoritesContext);
   const [recipe, setRecipe] = useState(null);
-  const [isFavorite, setIsFavorite] = useState(false); // Temporary state for styling
+  const [isFavorite, setIsFavorite] = useState(false); 
 
-  useEffect(() => {
+   // Set recipe and check favorite status
+   useEffect(() => {
     if (!loading && recipes.length > 0) {
       const foundRecipe = recipes.find((r) => r._id === id);
       setRecipe(foundRecipe || null);
+      
+      // Check if this recipe is in favorites
+      if (foundRecipe) {
+        const isFav = favorites.some(fav => fav._id === foundRecipe._id);
+        setIsFavorite(isFav);
+      }
     }
-  }, [id, recipes, loading]);
+  }, [id, recipes, loading, favorites]);
 
   const handleDelete = async () => {
     if (confirm("Are you sure you want to delete this recipe?")) {
@@ -52,9 +61,25 @@ const Page = () => {
     router.push(`/edit-recipe/${id}`);
   };
 
-  const toggleFavorite = () => {
-    setIsFavorite(!isFavorite); // Temporary toggle for styling
-    // Will be replaced with actual favorite functionality later
+  const toggleFavorite = async () => {
+    try {
+      if (isFavorite) {
+        await removeFavorite(id);
+        toast.success("Removed from favorites!", {
+          style: { background: "#65A30D", color: "#FFFBEF", border: "none" },
+        });
+      } else {
+        await addFavorite(id);
+        toast.success("Added to favorites!", {
+          style: { background: "#65A30D", color: "#FFFBEF", border: "none" },
+        });
+      }
+      setIsFavorite(!isFavorite); 
+    } catch (error) {
+      toast.error("Failed to update favorites", {
+        style: { background: "#F43F5E", color: "#FFFBEF", border: "none" },
+      });
+    }
   };
 
   if (loading) {
