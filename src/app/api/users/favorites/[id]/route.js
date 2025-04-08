@@ -31,8 +31,9 @@ export async function DELETE(request, { params }) {
       await user.save();
     }
 
+    await user.populate("favorites");
     return NextResponse.json(
-      { message: "Recipe removed from favorites" },
+      { message: "Recipe removed from favorites", favorites: user.favorites },
       { status: 200 }
     );
   } catch (error) {

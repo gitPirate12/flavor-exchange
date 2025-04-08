@@ -43,8 +43,10 @@ export async function POST(request) {
       await user.save();
     }
 
+    await user.populate("favorites");
     return NextResponse.json(
-      { message: "Recipe added to favorites" },
+      { message: "Recipe added to favorites", favorites: user.favorites },
+
       { status: 200 }
     );
   } catch (error) {
@@ -55,7 +57,6 @@ export async function POST(request) {
     );
   }
 }
-
 
 export async function GET(request) {
   const session = await auth();
@@ -70,10 +71,7 @@ export async function GET(request) {
     await connectDB();
     const user = await User.findById(session.user.id).populate("favorites");
     if (!user) {
-      return NextResponse.json(
-        { error: "User not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
     return NextResponse.json(user.favorites, { status: 200 });
