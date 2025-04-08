@@ -3,7 +3,6 @@ import "./globals.css";
 import { SessionProvider } from "next-auth/react";
 import ClientWrapper from "./components/ClientWrapper";
 
-
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
