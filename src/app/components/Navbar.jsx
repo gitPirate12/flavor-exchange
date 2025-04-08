@@ -2,7 +2,6 @@
 import React from 'react'
 import { useSession, signOut } from "next-auth/react"
 import { GoHome } from "react-icons/go"
-import { MdOutlineExplore } from "react-icons/md"
 import { PiBookOpenTextLight } from "react-icons/pi"
 import { IoMdHeartEmpty } from "react-icons/io"
 import Link from 'next/link'
@@ -25,10 +24,6 @@ const Navbar = () => {
           <Link href="/" className="flex items-center space-x-2 text-[#1F2937] hover:text-[#D97706] transition-colors group">
             <GoHome className="text-xl group-hover:scale-110 transition-transform" />
             <span className="font-medium">Home</span>
-          </Link>
-          <Link href="/explore" className="flex items-center space-x-2 text-[#1F2937] hover:text-[#D97706] transition-colors group">
-            <MdOutlineExplore className="text-xl group-hover:scale-110 transition-transform" />
-            <span className="font-medium">Explore</span>
           </Link>
           <Link href="/my-recipes" className="flex items-center space-x-2 text-[#1F2937] hover:text-[#D97706] transition-colors group">
             <PiBookOpenTextLight className="text-xl group-hover:scale-110 transition-transform" />
