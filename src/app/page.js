@@ -7,35 +7,45 @@ import RecipeContext from "../../lib/context/RecipeContext";
 import RecipeCard from "../app/components/RecipeCard";
 import { useRouter } from "next/navigation";
 import SearchBar from "./components/SearchBar";
+import { useSession } from "next-auth/react"; // Import useSession
 
 const Page = () => {
   const router = useRouter();
+  const { data: session, status } = useSession(); // Get session and status
   const { recipes, loading } = useContext(RecipeContext);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [filteredRecipes, setFilteredRecipes] = useState([]);
-  const initialLoadRef = useRef(true); // Track if initial setup has run
+  const initialLoadRef = useRef(true);
 
-  // Handle initial load and set filtered recipes only once
+  // Redirect to /sign-in if unauthenticated
   useEffect(() => {
-    if (loading || !recipes.length) return; // Exit early if still loading or no recipes
+    if (status === "unauthenticated") {
+      router.push("/sign-in");
+    }
+  }, [status, router]);
+
+  // Handle initial load and set filtered recipes
+  useEffect(() => {
+    if (loading || !recipes.length || status === "loading") return; // Wait for recipes and session
 
     if (initialLoadRef.current) {
-      setFilteredRecipes(recipes); // Set initial filtered recipes only once
+      setFilteredRecipes(recipes);
       const timer = setTimeout(() => {
         setIsInitialLoad(false);
-        initialLoadRef.current = false; // Mark initial load as complete
+        initialLoadRef.current = false;
       }, 1000);
 
       return () => clearTimeout(timer);
     }
-  }, [loading, recipes]); // Dependencies are stable with memoized context
+  }, [loading, recipes, status]);
 
-  // Callback for SearchBar to update filtered recipes
+  // Callback for SearchBar
   const handleFilter = (filtered) => {
     setFilteredRecipes(filtered);
   };
 
-  if (isInitialLoad || loading) {
+  // Show loading UI while session or recipes are loading
+  if (status === "loading" || isInitialLoad || loading) {
     return (
       <div className="min-h-screen bg-[#FFFBEF] flex items-center justify-center">
         <div className="text-center">
@@ -48,12 +58,16 @@ const Page = () => {
     );
   }
 
-  // Filter for Quick Meals (cooking time <= 15 minutes)
+  // If unauthenticated, this won't render due to the redirect, but included for clarity
+  if (!session) {
+    return null; // Prevent rendering while redirecting
+  }
+
+  // Filter recipes
   const quickMeals = filteredRecipes
     .filter((r) => parseInt(r.cookingTime, 10) <= 15)
     .slice(0, 4);
 
-  // Filter for Recently Added (sorted by createdAt)
   const recentRecipes = [...filteredRecipes]
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
     .slice(0, 4);

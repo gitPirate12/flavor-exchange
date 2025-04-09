@@ -3,12 +3,19 @@ import GitHub from "next-auth/providers/github";
 import { connectDB } from "../lib/db";
 import User from "../models/User";
 
-
 // Force Node.js runtime
 export const runtime = "nodejs";
 
 export const authConfig = {
-  providers: [GitHub],
+  providers: [
+    GitHub({
+      clientId: process.env.GITHUB_ID,
+      clientSecret: process.env.GITHUB_SECRET,
+    }),
+  ],
+  pages: {
+    signIn: "/sign-in", 
+  },
   callbacks: {
     async session({ session }) {
       try {
@@ -23,7 +30,7 @@ export const authConfig = {
         let user = await User.findOne({ email: userData.email });
 
         if (!user) {
-          await User.create(userData);
+          user = await User.create(userData);
         } else {
           await User.updateOne({ email: userData.email }, userData);
         }
