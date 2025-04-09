@@ -32,7 +32,7 @@ const Page = () => {
   // Loading state
   if (loading || isInitialLoad) {
     return (
-      <div className="min-h-screen bg-[#FFFBEF] flex items-center justify-center">
+      <div className="min-h-screen bg-[#FFFBEF] flex items-center justify-center px-4 sm:px-6">
         <div className="text-center">
           <GiCookingPot className="mx-auto text-4xl text-[#D97706] animate-bounce mb-4" />
           <p className="text-xl font-medium text-[#1F2937]">
@@ -51,36 +51,36 @@ const Page = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#FFFBEF] py-8 px-4 sm:px-6">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-[#FFF9F1] py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
         {/* Header Section */}
-        <div className="text-center mb-10">
-          <div className="inline-flex items-center bg-[#F43F5E]/10 px-6 py-3 rounded-full mb-4">
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center bg-[#F43F5E]/20 px-6 py-3 rounded-full mb-4">
             <FaHeart className="text-[#F43F5E] mr-2 text-xl" />
             <span className="text-lg font-medium text-[#F43F5E]">Your Saved Recipes</span>
           </div>
-          <h1 className="text-3xl md:text-4xl font-bold text-[#1F2937] mb-3">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#1F2937] mb-3">
             My <span className="text-[#D97706]">Favorite</span> Creations
           </h1>
-          <p className="text-lg text-[#1F2937]/80 max-w-2xl mx-auto">
+          <p className="text-lg sm:text-xl text-[#1F2937]/80 max-w-2xl mx-auto">
             All the recipes you've loved in one delicious collection
           </p>
         </div>
 
         {/* Search Bar */}
-        <div className="mb-8">
+        <div className="mb-10 sm:mb-12 max-w-2xl mx-auto relative">
           <SearchBar onFilter={handleFilter} />
         </div>
 
         {/* Favorites Grid */}
         {filteredFavorites.length === 0 ? (
-          <div className="bg-white rounded-xl p-8 sm:p-12 text-center border border-[#D97706]/20 max-w-2xl mx-auto">
+          <div className="bg-white rounded-xl p-8 sm:p-12 text-center border border-[#D97706]/20 max-w-2xl mx-auto shadow-lg">
             <div className="flex justify-center mb-4">
-              <div className="p-4 bg-[#FFFBEF] rounded-full">
+              <div className="p-4 bg-[#FFF9F1] rounded-full">
                 <FaSadTear className="text-4xl text-[#D97706]/70" />
               </div>
             </div>
-            <h2 className="text-2xl font-bold text-[#1F2937] mb-3">
+            <h2 className="text-2xl sm:text-3xl font-bold text-[#1F2937] mb-3">
               {favorites.length === 0 ? "No Favorites Yet" : "No Matching Favorites"}
             </h2>
             <p className="text-[#1F2937]/80 mb-6">
@@ -106,13 +106,13 @@ const Page = () => {
           </div>
         ) : (
           <>
-            <div className="mb-6 text-right">
+            <div className="mb-8 sm:mb-10 text-right">
               <p className="text-[#1F2937]/80 inline-block bg-[#65A30D]/10 px-4 py-2 rounded-full">
                 <span className="font-medium text-[#65A30D]">{filteredFavorites.length}</span>{" "}
                 {filteredFavorites.length === 1 ? "recipe" : "recipes"} saved
               </p>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {filteredFavorites.map((recipe) => (
                 <RecipeCard key={recipe._id} recipe={recipe} />
               ))}

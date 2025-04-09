@@ -5,7 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import RecipeForm from "../../components/RecipeForm";
 import RecipeContext from "../../../../lib/context/RecipeContext";
 
-const page = () => {
+const Page = () => {
   const { id } = useParams();
   const router = useRouter();
   const { recipes } = useContext(RecipeContext);
@@ -18,16 +18,17 @@ const page = () => {
       setRecipe(foundRecipe || null);
     }
   }, [id, recipes]);
+
   const handleSubmit = () => {
     // Redirect back to recipe details after successful submission
     router.push(`/recipes/${id}`);
   };
- 
-  return (
-    <div className="container ">
-    <RecipeForm recipe={recipe}  onSubmit={handleSubmit} /> 
-  </div>
-  )
-}
 
-export default page
+  return (
+    <div className="bg-[#FFFBEF] min-h-screen py-8 px-4 sm:px-6 lg:px-8">
+      <RecipeForm recipe={recipe} onSubmit={handleSubmit} />
+    </div>
+  );
+};
+
+export default Page;

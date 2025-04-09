@@ -3,12 +3,12 @@
 import React from "react";
 import RecipeForm from "../components/RecipeForm"; 
 
-const page = () => {
+const Page = () => {
   return (
-    <div className="container ">
-    <RecipeForm /> 
-  </div>
-  )
-}
+    <div className="bg-[#FFFBEF] min-h-screen py-8 px-4 sm:px-6 lg:px-8">
+        <RecipeForm />
+    </div>
+  );
+};
 
-export default page
+export default Page;

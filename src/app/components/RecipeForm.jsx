@@ -98,15 +98,15 @@ const RecipeForm = ({ recipe = null, onSubmit }) => {
   };
 
   return (
-    <div className="bg-[#FFFBEF] min-h-screen py-8 ">
-
-      <div className="max-w-2xl mx-auto  bg-white rounded-lg shadow-md p-6 my-4">
+    <div className="bg-[#FFFBEF] min-h-screen py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-full sm:max-w-2xl mx-auto bg-white rounded-lg shadow-md p-6 my-4">
         <h1 className="text-2xl font-bold text-[#1F2937] mb-6 flex items-center">
           <FaUtensils className="mr-2 text-[#D97706]" />
           {recipe ? "Edit Recipe" : "Add a New Recipe"}
         </h1>
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Recipe Title */}
           <div className="relative">
             <FaUtensils className="absolute left-3 top-3 text-[#1F2937]/50" />
             <input
@@ -119,6 +119,7 @@ const RecipeForm = ({ recipe = null, onSubmit }) => {
             />
           </div>
 
+          {/* Cooking Time */}
           <div className="relative">
             <FaClock className="absolute left-3 top-3 text-[#1F2937]/50" />
             <input
@@ -132,6 +133,7 @@ const RecipeForm = ({ recipe = null, onSubmit }) => {
             />
           </div>
 
+          {/* Image URL */}
           <div className="relative">
             <FaImage className="absolute left-3 top-3 text-[#1F2937]/50" />
             <input
@@ -143,6 +145,7 @@ const RecipeForm = ({ recipe = null, onSubmit }) => {
             />
           </div>
 
+          {/* Ingredients */}
           <div className="relative">
             <FaListUl className="absolute left-3 top-3 text-[#1F2937]/50" />
             <textarea
@@ -155,6 +158,7 @@ const RecipeForm = ({ recipe = null, onSubmit }) => {
             />
           </div>
 
+          {/* Instructions */}
           <div className="relative">
             <FaBookOpen className="absolute left-3 top-3 text-[#1F2937]/50" />
             <textarea
@@ -167,6 +171,7 @@ const RecipeForm = ({ recipe = null, onSubmit }) => {
             />
           </div>
 
+          {/* Difficulty */}
           <div className="relative">
             <GiCook className="absolute left-3 top-3 text-[#1F2937]/50" />
             <select
@@ -183,6 +188,7 @@ const RecipeForm = ({ recipe = null, onSubmit }) => {
             </select>
           </div>
 
+          {/* Tags */}
           <div className="relative">
             <FaTags className="absolute left-3 top-3 text-[#1F2937]/50" />
             <input
@@ -194,6 +200,7 @@ const RecipeForm = ({ recipe = null, onSubmit }) => {
             />
           </div>
 
+          {/* Submit Button */}
           <button
             type="submit"
             className="w-full py-3 bg-[#D97706] hover:bg-[#B65D04] text-white font-medium rounded-lg transition-colors duration-200 flex items-center justify-center"

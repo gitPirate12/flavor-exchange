@@ -16,17 +16,14 @@ const Page = () => {
 
   if (status === "loading") {
     return (
-      <div className="min-h-screen bg-[#FFFBEF] flex flex-col justify-center items-center p-4">
+      <div className="min-h-screen bg-[#FFFBEF] flex flex-col justify-center items-center p-4 sm:p-6 lg:p-8">
         <div className="w-full max-w-md bg-white rounded-lg shadow-md overflow-hidden p-8 text-center">
-
           <div className="flex justify-center mb-6">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#D97706]"></div>
           </div>
 
-
-          <h2 className="text-xl font-bold text-[#1F2937] mb-2">Preparing Your Kitchen</h2>
+          <h2 className="text-xl sm:text-2xl font-bold text-[#1F2937] mb-2">Preparing Your Kitchen</h2>
           <p className="text-[#1F2937]/80 mb-6">Gathering fresh ingredients...</p>
-
 
           <div className="w-full bg-[#FFFBEF] rounded-full h-2.5">
             <div className="bg-[#65A30D] h-2.5 rounded-full animate-pulse" style={{ width: '70%' }}></div>
@@ -38,12 +35,12 @@ const Page = () => {
 
   if (status === "unauthenticated") {
     return (
-      <div className="min-h-screen bg-[#FFFBEF] flex flex-col justify-center items-center p-4">
+      <div className="min-h-screen bg-[#FFFBEF] flex flex-col justify-center items-center p-4 sm:p-6 lg:p-8">
         <div className="w-full max-w-md bg-white rounded-lg shadow-md overflow-hidden">
           <div className="p-8 text-center">
             <div className="mb-8">
-              <h1 className="text-3xl font-bold text-[#1F2937] mb-2">Welcome to Flavor Exchange</h1>
-              <p className="text-[#1F2937]/80">Share your culinary creations with our community</p>
+              <h1 className="text-3xl sm:text-4xl font-bold text-[#1F2937] mb-2">Welcome to Flavor Exchange</h1>
+              <p className="text-[#1F2937]/80 text-sm sm:text-base">Share your culinary creations with our community</p>
             </div>
 
             <button
@@ -70,6 +67,7 @@ const Page = () => {
       </div>
     );
   }
+
   return null;
 };
 

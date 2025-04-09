@@ -8,7 +8,7 @@ const Footer = () => {
         <p className="text-[#1F2937]/80 text-xs sm:text-sm text-center mb-4 leading-relaxed">
           Conceptualized in{" "}
           <Link
-            href="https://www.banani.co"  
+            href="https://www.banani.co"
             target="_blank"
             rel="noopener noreferrer"
             className="px-0 text-[#1F2937] hover:text-[#D97706] font-medium text-xs sm:text-sm transition-colors"
@@ -33,7 +33,19 @@ const Footer = () => {
           >
             Tailwind CSS
           </Link>
-          , by yours truly.
+          , by yours truly.{" "}
+          <span className="block sm:inline">
+            You can check the source code on{" "}
+            <Link
+              href="https://github.com/gitPirate12/flavor-exchange"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#1F2937] hover:text-[#D97706] font-medium text-xs sm:text-sm transition-colors"
+            >
+              GitHub
+            </Link>
+            .
+          </span>
         </p>
 
         <p className="text-[#1F2937]/60 text-xs text-center">
