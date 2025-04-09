@@ -3,8 +3,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import RecipeContext from "../../../../lib/context/RecipeContext";
-import FavoritesContext from "../../../../lib/context/FavoritesContext";
+import RecipeContext from "../../../lib/context/RecipeContext";
+import FavoritesContext from "../../../lib/context/FavoritesContext";
 import { toast } from "sonner";
 import {
   FaClock,

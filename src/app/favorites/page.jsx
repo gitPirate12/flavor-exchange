@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useContext, useEffect, useState } from "react";
-import RecipeCard from "../components/RecipeCard";
-import FavoritesContext from "../../../lib/context/FavoritesContext";
+import RecipeCard from "../../components/RecipeCard";
+import FavoritesContext from "../../lib/context/FavoritesContext";
 import { FaHeart, FaSearch, FaSadTear } from "react-icons/fa";
 import { GiCookingPot } from "react-icons/gi";
-import SearchBar from "../components/SearchBar";
+import SearchBar from "../../components/SearchBar";
 
 const Page = () => {
   const { favorites, loading } = useContext(FavoritesContext);

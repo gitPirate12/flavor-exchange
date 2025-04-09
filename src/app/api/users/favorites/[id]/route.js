@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { connectDB } from "../../../../../../lib/db";
-import User from "../../../../../../models/User";
+import { connectDB } from "../../../../../lib/db";
+import User from "../../../../../models/User";
 import { auth } from "../../../../../auth";
 
 export async function DELETE(request, { params }) {

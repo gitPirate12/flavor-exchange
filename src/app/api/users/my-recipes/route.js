@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { connectDB } from "../../../../../lib/db";
-import Recipe from "../../../../../models/Recipe";
+import { connectDB } from "../../../../lib/db";
+import Recipe from "../../../../models/Recipe";
 import { auth } from "../../../../auth";
 
 export async function GET(request) {

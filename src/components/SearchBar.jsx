@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useContext, useState, useEffect, useCallback } from "react";
-import RecipeContext from "../../../lib/context/RecipeContext";
+import RecipeContext from "../lib/context/RecipeContext";
 import debounce from "lodash/debounce"; 
 
 const SearchBar = ({ onFilter }) => {

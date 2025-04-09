@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useContext } from "react";
-import RecipeContext from "../../../lib/context/RecipeContext";
+import RecipeContext from "./../lib/context/RecipeContext";
 import { FaUtensils, FaClock, FaImage, FaListUl, FaBookOpen, FaTags } from "react-icons/fa";
 import { GiCook } from "react-icons/gi";
 import { toast } from 'sonner';

@@ -3,8 +3,8 @@
 import { useSession } from "next-auth/react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
-import { RecipeProvider } from "../../../lib/context/RecipeContext";
-import { FavoritesProvider } from "../../../lib/context/FavoritesContext";
+import { RecipeProvider } from "./../lib/context/RecipeContext";
+import { FavoritesProvider } from "./../lib/context/FavoritesContext";
 import { Toaster } from 'sonner'
 
 

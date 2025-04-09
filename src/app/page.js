@@ -3,8 +3,8 @@
 import React, { useContext, useEffect, useState, useRef } from "react";
 import { FaFire, FaClock, FaLeaf, FaSearch } from "react-icons/fa";
 import { GiCookingPot } from "react-icons/gi";
-import RecipeContext from "../../lib/context/RecipeContext";
-import RecipeCard from "../app/components/RecipeCard";
+import RecipeContext from "../lib/context/RecipeContext";
+import RecipeCard from "../components/RecipeCard";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 

@@ -2,8 +2,8 @@
 
 import React, { useContext, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import RecipeContext from "../../../lib/context/RecipeContext";
-import RecipeCard from "../components/RecipeCard";
+import RecipeContext from "../../lib/context/RecipeContext";
+import RecipeCard from "../../components/RecipeCard";
 import { GiCookingPot, GiMeal } from "react-icons/gi";
 import { FaLeaf, FaSearch, FaFire, FaClock } from "react-icons/fa";
 import { useRouter } from "next/navigation";

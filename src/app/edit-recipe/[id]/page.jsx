@@ -2,8 +2,8 @@
 
 import React, { useContext, useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import RecipeForm from "../../components/RecipeForm";
-import RecipeContext from "../../../../lib/context/RecipeContext";
+import RecipeForm from "../../../components/RecipeForm";
+import RecipeContext from "../../../lib/context/RecipeContext";
 
 const Page = () => {
   const { id } = useParams();

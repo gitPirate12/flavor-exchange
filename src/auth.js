@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import GitHub from "next-auth/providers/github";
-import { connectDB } from "../lib/db";
-import User from "../models/User";
+import { connectDB } from "./lib/db";
+import User from "./models/User";
 
 // Force Node.js runtime
 export const runtime = "nodejs";
