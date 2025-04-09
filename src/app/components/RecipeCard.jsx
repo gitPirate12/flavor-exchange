@@ -1,9 +1,14 @@
 import React from "react";
 import Link from "next/link";
-import { FaClock, FaFire } from "react-icons/fa";
+import { FaClock, FaFire, FaStar } from "react-icons/fa"; // Add FaStar for rating
 import { GiCookingPot } from "react-icons/gi";
 
 const RecipeCard = ({ recipe }) => {
+  // Calculate average rating
+  const totalRatings = recipe.rating.length;
+  const sumRatings = recipe.rating.reduce((sum, r) => sum + r.value, 0);
+  const averageRating = totalRatings > 0 ? (sumRatings / totalRatings).toFixed(1) : "0.0";
+
   return (
     <Link href={`/recipes/${recipe._id}`} className="block w-full">
       <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-all duration-200 border border-[#D97706]/20 hover:border-[#D97706]/40 w-full sm:w-80 md:w-64 h-80 flex flex-col">
@@ -35,6 +40,11 @@ const RecipeCard = ({ recipe }) => {
           <div className="flex items-center text-[#1F2937]/80 mb-1">
             <FaFire className="mr-2 text-[#F43F5E]" />
             <span className="capitalize">{recipe.difficulty}</span>
+          </div>
+
+          <div className="flex items-center text-[#1F2937]/80 mb-1">
+            <FaStar className="mr-2 text-[#D97706]" />
+            <span>{averageRating} ({totalRatings} {totalRatings === 1 ? "rating" : "ratings"})</span>
           </div>
 
           {recipe.tags && recipe.tags.length > 0 && (

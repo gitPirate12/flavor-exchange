@@ -2,44 +2,56 @@
 
 import React, { useContext, useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import RecipeContext from "../../../../lib/context/RecipeContext";
+import FavoritesContext from "../../../../lib/context/FavoritesContext";
 import { toast } from "sonner";
-import { 
-  FaClock, 
-  FaFire, 
-  FaEdit, 
-  FaTrash, 
-  FaHeart, 
+import {
+  FaClock,
+  FaFire,
+  FaEdit,
+  FaTrash,
+  FaHeart,
   FaRegHeart,
   FaUtensils,
   FaListUl,
   FaBookOpen,
-  FaTag
+  FaTag,
+  FaStar
 } from "react-icons/fa";
 import { GiCookingPot, GiKnifeFork } from "react-icons/gi";
-import FavoritesContext from "../../../../lib/context/FavoritesContext"; 
 
 const Page = () => {
   const { id } = useParams();
   const router = useRouter();
-  const { recipes, loading, deleteRecipe } = useContext(RecipeContext);
+  const { data: session } = useSession();
+  const { recipes, loading, deleteRecipe, addRating, updateRating } = useContext(RecipeContext);
   const { favorites, addFavorite, removeFavorite } = useContext(FavoritesContext);
   const [recipe, setRecipe] = useState(null);
-  const [isFavorite, setIsFavorite] = useState(false); 
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [userRating, setUserRating] = useState(0);
+  const [averageRating, setAverageRating] = useState(0);
+  const [totalRatings, setTotalRatings] = useState(0);
+  const [hoverRating, setHoverRating] = useState(0);
 
-   // Set recipe and check favorite status
-   useEffect(() => {
+  useEffect(() => {
     if (!loading && recipes.length > 0) {
       const foundRecipe = recipes.find((r) => r._id === id);
       setRecipe(foundRecipe || null);
-      
-      // Check if this recipe is in favorites
+
       if (foundRecipe) {
         const isFav = favorites.some(fav => fav._id === foundRecipe._id);
         setIsFavorite(isFav);
+
+        const userRate = foundRecipe.rating.find(r => r.userId.toString() === session?.user?.id);
+        setUserRating(userRate ? userRate.value : 0);
+
+        const sum = foundRecipe.rating.reduce((acc, r) => acc + r.value, 0);
+        setTotalRatings(foundRecipe.rating.length);
+        setAverageRating(foundRecipe.rating.length > 0 ? (sum / foundRecipe.rating.length).toFixed(1) : 0);
       }
     }
-  }, [id, recipes, loading, favorites]);
+  }, [id, recipes, loading, favorites, session]);
 
   const handleDelete = async () => {
     if (confirm("Are you sure you want to delete this recipe?")) {
@@ -57,7 +69,7 @@ const Page = () => {
     }
   };
 
-  const handleEdit = () => { 
+  const handleEdit = () => {
     router.push(`/edit-recipe/${id}`);
   };
 
@@ -74,7 +86,7 @@ const Page = () => {
           style: { background: "#65A30D", color: "#FFFBEF", border: "none" },
         });
       }
-      setIsFavorite(!isFavorite); 
+      setIsFavorite(!isFavorite);
     } catch (error) {
       toast.error("Failed to update favorites", {
         style: { background: "#F43F5E", color: "#FFFBEF", border: "none" },
@@ -82,7 +94,27 @@ const Page = () => {
     }
   };
 
-  if (loading) {
+  const handleRating = async (rating) => {
+    try {
+      const updatedRecipe = userRating > 0
+        ? await updateRating(id, rating)
+        : await addRating(id, rating);
+
+      setRecipe(updatedRecipe);
+      setUserRating(updatedRecipe.userRating);
+      setAverageRating(updatedRecipe.averageRating);
+      setTotalRatings(updatedRecipe.totalRatings);
+      toast.success(`Rating ${userRating > 0 ? "updated" : "submitted"} successfully!`, {
+        style: { background: "#65A30D", color: "#FFFBEF", border: "none" },
+      });
+    } catch (error) {
+      toast.error(error, {
+        style: { background: "#F43F5E", color: "#FFFBEF", border: "none" },
+      });
+    }
+  };
+
+  if (loading || !session) {
     return (
       <div className="min-h-screen bg-[#FFFBEF] flex items-center justify-center">
         <div className="text-center">
@@ -102,7 +134,7 @@ const Page = () => {
           <GiCookingPot className="mx-auto text-4xl text-[#D97706] mb-4" />
           <h2 className="text-2xl font-bold text-[#1F2937] mb-2">Recipe Not Found</h2>
           <p className="text-[#1F2937]/80">The recipe you're looking for doesn't exist</p>
-          <button 
+          <button
             onClick={() => router.push("/")}
             className="mt-4 bg-[#D97706] text-white px-4 py-2 rounded-lg hover:bg-[#B65D04] transition-colors"
           >
@@ -122,7 +154,7 @@ const Page = () => {
             <FaUtensils className="text-[#D97706] mr-3" />
             {recipe.title}
           </h1>
-          
+
           <div className="flex flex-wrap items-center gap-4 mt-4">
             <span className="flex items-center text-[#1F2937]/80">
               <FaClock className="text-[#D97706] mr-2" />
@@ -132,6 +164,34 @@ const Page = () => {
               <FaFire className="text-[#F43F5E] mr-2" />
               {recipe.difficulty}
             </span>
+            <span className="flex items-center text-[#1F2937]/80">
+              <FaStar className="text-[#D97706] mr-2" />
+              {averageRating} ({totalRatings} {totalRatings === 1 ? "rating" : "ratings"})
+            </span>
+          </div>
+
+          {/* Rating Section */}
+          <div className="mt-4">
+            <h3 className="text-lg font-semibold text-[#1F2937] mb-2">Rate this Recipe</h3>
+            <div className="flex gap-1">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <FaStar
+                  key={star}
+                  className={`text-2xl cursor-pointer transition-colors ${star <= (hoverRating || userRating)
+                      ? "text-[#D97706]"
+                      : "text-[#1F2937]/30"
+                    }`}
+                  onClick={() => handleRating(star)}
+                  onMouseEnter={() => setHoverRating(star)}
+                  onMouseLeave={() => setHoverRating(0)}
+                />
+              ))}
+            </div>
+            {userRating > 0 && (
+              <p className="text-sm text-[#1F2937]/80 mt-1">
+                You rated this {userRating} star{userRating !== 1 ? "s" : ""}
+              </p>
+            )}
           </div>
         </div>
 
@@ -144,7 +204,7 @@ const Page = () => {
               className="w-full h-full object-cover"
             />
             <div className="absolute top-4 right-4">
-              <button 
+              <button
                 onClick={toggleFavorite}
                 className="p-2 bg-white/80 rounded-full shadow-md hover:scale-110 transition-all"
                 aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
@@ -161,7 +221,7 @@ const Page = () => {
 
         {/* Action Buttons */}
         <div className="p-4 border-b border-[#D97706]/20 flex justify-between">
-          <button 
+          <button
             onClick={handleEdit}
             className="flex items-center gap-2 bg-[#D97706] text-white px-4 py-2 rounded-lg hover:bg-[#B65D04] transition-colors"
           >
