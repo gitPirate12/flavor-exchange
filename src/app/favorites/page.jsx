@@ -1,21 +1,33 @@
 "use client";
 
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from "react";
 import RecipeCard from "../components/RecipeCard";
 import FavoritesContext from "../../../lib/context/FavoritesContext";
 import { FaHeart, FaSearch, FaSadTear } from "react-icons/fa";
 import { GiCookingPot } from "react-icons/gi";
+import SearchBar from "../components/SearchBar";
 
 const Page = () => {
   const { favorites, loading } = useContext(FavoritesContext);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [filteredFavorites, setFilteredFavorites] = useState([]);
 
+  // Handle initial load timing
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsInitialLoad(false);
     }, 1000);
     return () => clearTimeout(timer);
   }, []);
+
+  // Set initial filtered favorites when favorites change
+  useEffect(() => {
+    if (loading || !favorites.length) return;
+
+    setFilteredFavorites(
+      [...favorites].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    );
+  }, [favorites, loading]);
 
   // Loading state
   if (loading || isInitialLoad) {
@@ -31,9 +43,12 @@ const Page = () => {
     );
   }
 
-  // Sort favorites by creation date (newest first)
-  const sortedFavorites = [...favorites]
-    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  // Callback for SearchBar to update filtered favorites
+  const handleFilter = (filtered) => {
+    setFilteredFavorites(
+      [...filtered].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    );
+  };
 
   return (
     <div className="min-h-screen bg-[#FFFBEF] py-8 px-4 sm:px-6">
@@ -52,8 +67,13 @@ const Page = () => {
           </p>
         </div>
 
+        {/* Search Bar */}
+        <div className="mb-8">
+          <SearchBar onFilter={handleFilter} />
+        </div>
+
         {/* Favorites Grid */}
-        {favorites.length === 0 ? (
+        {filteredFavorites.length === 0 ? (
           <div className="bg-white rounded-xl p-8 sm:p-12 text-center border border-[#D97706]/20 max-w-2xl mx-auto">
             <div className="flex justify-center mb-4">
               <div className="p-4 bg-[#FFFBEF] rounded-full">
@@ -61,18 +81,22 @@ const Page = () => {
               </div>
             </div>
             <h2 className="text-2xl font-bold text-[#1F2937] mb-3">
-              No Favorites Yet
+              {favorites.length === 0 ? "No Favorites Yet" : "No Matching Favorites"}
             </h2>
             <p className="text-[#1F2937]/80 mb-6">
-              You haven't saved any recipes to your favorites collection.
+              {favorites.length === 0
+                ? "You haven't saved any recipes to your favorites collection."
+                : "Try adjusting your search to find your favorite recipes."}
             </p>
-            <div className="flex items-center justify-center gap-3 text-[#1F2937]/60">
-              <GiCookingPot className="text-[#65A30D]" />
-              <span>Browse recipes and click the</span>
-              <FaHeart className="text-[#F43F5E]" />
-              <span>icon to save them here</span>
-            </div>
-            <button 
+            {favorites.length === 0 && (
+              <div className="flex items-center justify-center gap-3 text-[#1F2937]/60">
+                <GiCookingPot className="text-[#65A30D]" />
+                <span>Browse recipes and click the</span>
+                <FaHeart className="text-[#F43F5E]" />
+                <span>icon to save them here</span>
+              </div>
+            )}
+            <button
               onClick={() => window.location.href = "/"}
               className="mt-6 bg-[#D97706] hover:bg-[#B65D04] text-white font-medium py-2 px-6 rounded-lg transition-colors duration-200 inline-flex items-center gap-2"
             >
@@ -84,11 +108,12 @@ const Page = () => {
           <>
             <div className="mb-6 text-right">
               <p className="text-[#1F2937]/80 inline-block bg-[#65A30D]/10 px-4 py-2 rounded-full">
-                <span className="font-medium text-[#65A30D]">{favorites.length}</span> {favorites.length === 1 ? 'recipe' : 'recipes'} saved
+                <span className="font-medium text-[#65A30D]">{filteredFavorites.length}</span>{" "}
+                {filteredFavorites.length === 1 ? "recipe" : "recipes"} saved
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {sortedFavorites.map((recipe) => (
+              {filteredFavorites.map((recipe) => (
                 <RecipeCard key={recipe._id} recipe={recipe} />
               ))}
             </div>

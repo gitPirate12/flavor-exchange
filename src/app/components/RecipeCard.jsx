@@ -1,10 +1,10 @@
 import React from "react";
 import Link from "next/link";
-import { FaClock, FaFire, FaStar } from "react-icons/fa"; // Add FaStar for rating
+import { FaClock, FaFire, FaStar } from "react-icons/fa"; 
 import { GiCookingPot } from "react-icons/gi";
 
 const RecipeCard = ({ recipe }) => {
-  // Calculate average rating
+  
   const totalRatings = recipe.rating.length;
   const sumRatings = recipe.rating.reduce((sum, r) => sum + r.value, 0);
   const averageRating = totalRatings > 0 ? (sumRatings / totalRatings).toFixed(1) : "0.0";

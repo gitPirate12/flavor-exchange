@@ -1,23 +1,39 @@
 "use client";
 
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import { FaFire, FaClock, FaLeaf } from "react-icons/fa";
 import { GiCookingPot } from "react-icons/gi";
 import RecipeContext from "../../lib/context/RecipeContext";
 import RecipeCard from "../app/components/RecipeCard";
 import { useRouter } from "next/navigation";
+import SearchBar from "./components/SearchBar";
 
 const Page = () => {
   const router = useRouter();
   const { recipes, loading } = useContext(RecipeContext);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [filteredRecipes, setFilteredRecipes] = useState([]);
+  const initialLoadRef = useRef(true); // Track if initial setup has run
 
+  // Handle initial load and set filtered recipes only once
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsInitialLoad(false);
-    }, 1000);
-    return () => clearTimeout(timer);
-  }, []);
+    if (loading || !recipes.length) return; // Exit early if still loading or no recipes
+
+    if (initialLoadRef.current) {
+      setFilteredRecipes(recipes); // Set initial filtered recipes only once
+      const timer = setTimeout(() => {
+        setIsInitialLoad(false);
+        initialLoadRef.current = false; // Mark initial load as complete
+      }, 1000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [loading, recipes]); // Dependencies are stable with memoized context
+
+  // Callback for SearchBar to update filtered recipes
+  const handleFilter = (filtered) => {
+    setFilteredRecipes(filtered);
+  };
 
   if (isInitialLoad || loading) {
     return (
@@ -32,16 +48,18 @@ const Page = () => {
     );
   }
 
-  const recentRecipes = [...recipes]
-    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-    .slice(0, 4);
-
-  const quickMeals = recipes
+  // Filter for Quick Meals (cooking time <= 15 minutes)
+  const quickMeals = filteredRecipes
     .filter((r) => parseInt(r.cookingTime, 10) <= 15)
     .slice(0, 4);
 
-  const handleRedirect = () => { 
-    router.push('/add-recipe');
+  // Filter for Recently Added (sorted by createdAt)
+  const recentRecipes = [...filteredRecipes]
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    .slice(0, 4);
+
+  const handleRedirect = () => {
+    router.push("/add-recipe");
   };
 
   return (
@@ -60,6 +78,11 @@ const Page = () => {
         </p>
       </header>
 
+      {/* Search Bar */}
+      <section className="mb-12">
+        <SearchBar onFilter={handleFilter} />
+      </section>
+
       {/* Quick Meals Section */}
       <section className="mb-14">
         <div className="flex items-center justify-between mb-6 px-2">
@@ -73,15 +96,15 @@ const Page = () => {
             View all
           </a>
         </div>
-        
+
         {quickMeals.length === 0 ? (
           <div className="bg-white rounded-xl p-8 text-center border border-[#D97706]/20">
             <GiCookingPot className="mx-auto text-4xl text-[#D97706]/50 mb-4" />
-            <h3 className="text-lg font-medium text-[#1F2937] mb-2">No quick meals yet</h3>
-            <p className="text-[#1F2937]/60">Check back soon for fast recipe ideas!</p>
+            <h3 className="text-lg font-medium text-[#1F2937] mb-2">No quick meals found</h3>
+            <p className="text-[#1F2937]/60">Try adjusting your search or check back soon!</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1 px-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 px-2">
             {quickMeals.map((recipe) => (
               <RecipeCard key={recipe._id} recipe={recipe} />
             ))}
@@ -102,12 +125,12 @@ const Page = () => {
             View all
           </a>
         </div>
-        
+
         {recentRecipes.length === 0 ? (
           <div className="bg-white rounded-xl p-8 text-center border border-[#D97706]/20">
             <GiCookingPot className="mx-auto text-4xl text-[#D97706]/50 mb-4" />
-            <h3 className="text-lg font-medium text-[#1F2937] mb-2">No recent recipes</h3>
-            <p className="text-[#1F2937]/60">Our chefs are cooking up something special!</p>
+            <h3 className="text-lg font-medium text-[#1F2937] mb-2">No recent recipes found</h3>
+            <p className="text-[#1F2937]/60">Try adjusting your search or check back soon!</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 px-2">
@@ -124,7 +147,7 @@ const Page = () => {
         <p className="text-[#1F2937]/80 mb-6 max-w-2xl mx-auto">
           Have a special dish you'd like to share with our community? Add your recipe today!
         </p>
-        <button 
+        <button
           onClick={handleRedirect}
           className="bg-[#D97706] hover:bg-[#B65D04] text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200"
         >
